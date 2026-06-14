@@ -8,12 +8,12 @@ require __DIR__ . '/../vendor/autoload.php';
 function _mailer() {
     $mail = new PHPMailer(true);
     $mail->isSMTP();
-    $mail->Host       = 'smtp.gmail.com';
+    $mail->Host       = 'smtp.sendgrid.net';
     $mail->SMTPAuth   = true;
-    $mail->Username   = 'yoelofficial123@gmail.com';
-    $mail->Password   = 'omdpxprbilucedhp';
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-    $mail->Port       = 465;
+    $mail->Username   = 'apikey';
+    $mail->Password   = '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';
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port       = 587;
     $mail->Timeout    = 10;
     $mail->SMTPKeepAlive = false;
     $mail->setFrom('yoelofficial123@gmail.com', 'Tokomedia');

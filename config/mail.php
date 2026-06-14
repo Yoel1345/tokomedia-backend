@@ -1,68 +1,31 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
-
-require __DIR__ . '/../vendor/autoload.php';
-
-function _mailer() {
-    $mail = new PHPMailer(true);
-    $mail->isSMTP();
-    $mail->Host       = 'smtp.sendgrid.net';
-    $mail->SMTPAuth   = true;
-    $mail->Username   = 'apikey';
-    $mail->Password   = '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';
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port       = 587;
-    $mail->Timeout    = 10;
-    $mail->SMTPKeepAlive = false;
-    $mail->setFrom('yoelofficial123@gmail.com', 'Tokomedia');
-    return $mail;
-}
 
 function sendOtpEmail($to, $code) {
-    try {
-        $mail = _mailer();
-        $mail->addAddress($to);
-        $mail->Subject = 'Kode Verifikasi Tokomedia';
-        $mail->Body    = "Kode verifikasi Anda: $code\n\nJangan bagikan kode ini kepada siapa pun.";
-        $mail->send();
-        return true;
-    } catch (Exception $e) {
+    $key  = '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';
+    $data = json_encode([
+        'personalizations' => [['to' => [['email' => $to]]]],
+        'from' => ['email' => 'yoelofficial123@gmail.com', 'name' => 'Tokomedia'],
+        'subject' => 'Kode Verifikasi Tokomedia',
+        'content' => [['type' => 'text/plain', 'value' => "Kode verifikasi Anda: $code\n\nJangan bagikan kode ini kepada siapa pun."]],
+    ]);
+    $ch = curl_init('https://api.sendgrid.com/v3/mail/send');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $key, 'Content-Type: application/json'],
+        CURLOPT_POSTFIELDS => $data,
+    ]);
+    $res = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error = curl_error($ch);
+    curl_close($ch);
+    if ($error) {
+        error_log("SendGrig cURL error: $error | code: $httpCode | response: $res");
         return false;
     }
-}
-
-function sendOtpSms($phone, $code) {
-    $gateway = _smsGateway($phone);
-    if (!$gateway) return false;
-    try {
-        $mail = _mailer();
-        $mail->addAddress($gateway);
-        $mail->Subject = '';
-        $mail->Body    = "Kode verifikasi Tokomedia Anda: $code";
-        $mail->send();
-        return true;
-    } catch (Exception $e) {
+    if ($httpCode < 200 || $httpCode >= 300) {
+        error_log("SendGrid API error: $httpCode | response: $res");
         return false;
     }
-}
-
-function _smsGateway($phone) {
-    $phone = preg_replace('/[^0-9]/', '', $phone);
-    $map = [
-        '@telkomsel.net' => ['0811','0812','0813','0821','0822','0823','0851','0852','0853'],
-        '@xl.co.id'      => ['0817','0818','0819','0859','0878','0877','0831','0832','0838'],
-        '@indosat.net'   => ['0814','0815','0816','0855','0856','0857','0858'],
-        '@three.co.id'   => ['0895','0896','0897','0898','0899'],
-        '@smartfren.com' => ['0881','0882','0883','0884','0885','0886','0887','0888','0889'],
-    ];
-    foreach ($map as $domain => $prefixes) {
-        foreach ($prefixes as $prefix) {
-            if (strpos($phone, $prefix) === 0) {
-                return $phone . $domain;
-            }
-        }
-    }
-    return null;
+    return true;
 }

@@ -11,12 +11,12 @@ function _mailer() {
     $mail->Host       = 'smtp.gmail.com';
     $mail->SMTPAuth   = true;
     $mail->Username   = 'yoelofficial123@gmail.com';
-    $mail->Password   = 'hinpzxlyrbwplvoq';
+    $mail->Password   = 'omdpxprbilucedhp';
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port       = 587;
     $mail->Timeout    = 10;
     $mail->SMTPKeepAlive = false;
-    $mail->setFrom('yoelofficial123@gmail.com', 'Tokopedia');
+    $mail->setFrom('yoelofficial123@gmail.com', 'Tokomedia');
     return $mail;
 }
 
@@ -24,7 +24,7 @@ function sendOtpEmail($to, $code) {
     try {
         $mail = _mailer();
         $mail->addAddress($to);
-        $mail->Subject = 'Kode Verifikasi Tokopedia';
+        $mail->Subject = 'Kode Verifikasi Tokomedia';
         $mail->Body    = "Kode verifikasi Anda: $code\n\nJangan bagikan kode ini kepada siapa pun.";
         $mail->send();
         return true;
@@ -40,7 +40,7 @@ function sendOtpSms($phone, $code) {
         $mail = _mailer();
         $mail->addAddress($gateway);
         $mail->Subject = '';
-        $mail->Body    = "Kode verifikasi Tokopedia Anda: $code";
+        $mail->Body    = "Kode verifikasi Tokomedia Anda: $code";
         $mail->send();
         return true;
     } catch (Exception $e) {

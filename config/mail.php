@@ -12,8 +12,8 @@ function _mailer() {
     $mail->SMTPAuth   = true;
     $mail->Username   = 'yoelofficial123@gmail.com';
     $mail->Password   = 'omdpxprbilucedhp';
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port       = 587;
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+    $mail->Port       = 465;
     $mail->Timeout    = 10;
     $mail->SMTPKeepAlive = false;
     $mail->setFrom('yoelofficial123@gmail.com', 'Tokomedia');

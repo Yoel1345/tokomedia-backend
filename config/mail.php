@@ -1,7 +1,7 @@
 <?php
 
 function sendOtpEmail($to, $code) {
-    $key  = getenv('SENDGRID_API_KEY') ?: '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';
+    $key  = getenv('SENDGRID_API_KEY');
     $data = json_encode([
         'personalizations' => [['to' => [['email' => $to]]]],
         'from' => ['email' => 'yoelofficial123@gmail.com', 'name' => 'Tokomedia'],
@@ -20,7 +20,7 @@ function sendOtpEmail($to, $code) {
     $error = curl_error($ch);
     curl_close($ch);
     if ($error) {
-        error_log("SendGrig cURL error: $error | code: $httpCode | response: $res");
+        error_log("SendGrid cURL error: $error | code: $httpCode | response: $res");
         return false;
     }
     if ($httpCode < 200 || $httpCode >= 300) {

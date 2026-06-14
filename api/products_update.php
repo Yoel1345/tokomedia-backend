@@ -62,7 +62,8 @@ try {
         $filename = uniqid('prod_') . '.' . $ext;
         $dest = __DIR__ . '/../uploads/products/' . $filename;
         if (move_uploaded_file($_FILES['image']['tmp_name'], $dest)) {
-            $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+            $proto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
+            $protocol = ($proto === 'https' || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) ? 'https' : 'http';
             $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
             $imagePath = "$protocol://$host/uploads/products/$filename";
             // Delete old image

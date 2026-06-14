@@ -1,7 +1,7 @@
 <?php
 
 function sendOtpEmail($to, $code) {
-    $key  = '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';
+    $key  = getenv('SENDGRID_API_KEY') ?: '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';
     $data = json_encode([
         'personalizations' => [['to' => [['email' => $to]]]],
         'from' => ['email' => 'yoelofficial123@gmail.com', 'name' => 'Tokomedia'],

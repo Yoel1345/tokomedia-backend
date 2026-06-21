@@ -79,6 +79,14 @@ try {
     ]);
     $id = $pdo->lastInsertId();
     echo json_encode(['status' => 'success', 'message' => 'Produk berhasil ditambahkan', 'id' => $id, 'image_path' => $imagePath]);
+
+    // Send notifications
+    try {
+        require_once __DIR__ . '/../config/notification_helper.php';
+        notifyAllUsers($userIdentifier, "Produk Baru: $name", "$name seharga Rp" . number_format($price, 0, ',', '.') . " sudah tersedia di Tokomedia!");
+    } catch (Exception $notifErr) {
+        // Silent fail - don't block product creation
+    }
 } catch (PDOException $e) {
     file_put_contents(__DIR__ . '/../debug_upload.log', "DB ERROR: " . $e->getMessage() . "\n", FILE_APPEND);
     echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan produk: ' . $e->getMessage()]);

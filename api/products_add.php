@@ -83,7 +83,7 @@ try {
     // Send notifications
     try {
         require_once __DIR__ . '/../config/notification_helper.php';
-        notifyAllUsers($userIdentifier, "Produk Baru: $name", "$name seharga Rp" . number_format($price, 0, ',', '.') . " sudah tersedia di Tokomedia!");
+        notifyAllUsers($pdo, $userIdentifier, "Produk Baru: $name", "$name seharga Rp" . number_format($price, 0, ',', '.') . " sudah tersedia di Tokomedia!");
     } catch (Exception $notifErr) {
         // Silent fail - don't block product creation
     }

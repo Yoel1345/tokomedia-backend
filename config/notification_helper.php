@@ -107,9 +107,7 @@ function sendEmailNotification(string $email, string $title, string $body): bool
     return $httpCode >= 200 && $httpCode < 300;
 }
 
-function notifyAllUsers(string $senderIdentifier, string $title, string $body): array {
-    require_once __DIR__ . '/database.php';
-
+function notifyAllUsers(PDO $pdo, string $senderIdentifier, string $title, string $body): array {
     $stmt = $pdo->query("SELECT phone, email FROM user_232025 WHERE is_verified = 1");
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

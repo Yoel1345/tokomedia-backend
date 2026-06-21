@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/notification_helper.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
@@ -16,7 +17,7 @@ $title = $data['title'] ?? 'Produk Baru di Tokomedia';
 $body = $data['body'] ?? '';
 $sender = $data['sender_identifier'] ?? '';
 
-$result = notifyAllUsers($sender, $title, $body);
+$result = notifyAllUsers($pdo, $sender, $title, $body);
 
 echo json_encode([
     'status' => 'success',
